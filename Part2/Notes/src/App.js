@@ -1,16 +1,50 @@
+import { useState } from 'react'
 import Note from './Note'
 
-const App = ({ notes }) => {
+const App = (props) => {
+  const[notes, setNotes] = useState(props.notes)
+  const[newNote, setNewNote] = useState('enter input')
+  const[showAll, setShowAll] = useState(false)
+ 
+  const addNote = (event) => {
+    if 
+    event.preventDefault()
+    const newNoteObj = {
+      content: newNote, 
+      important: Math.random() < 0.5,
+      id: notes.length + 1, 
+    } 
+    setNotes(notes.concat(newNoteObj))
+    setNewNote('')
+  }
+
+  const userFilter = () => {
+    setShowAll(!showAll)
+  }
+
+  const notesToShow = showAll 
+    ? notes 
+    : notes.filter(note => note.important === true)
+
+  const handleNoteChange = (event) => {
+    setNewNote(event.target.value)
+  } 
+
   return (
     <div>
       <h1>Notes</h1>
-      <ul>
+        <div>
+          <button onClick = {userFilter}>Filter</button>
+        </div>
         <ul>
-          {notes.map(note => 
+          {notesToShow.map(note => 
             <Note key={note.id} note={note} />
           )}
         </ul>
-      </ul>
+      <form onSubmit={addNote}>
+        <input value={newNote} onChange={handleNoteChange} />
+        <button type="submit">save</button>
+      </form>
     </div>
   )
 }
