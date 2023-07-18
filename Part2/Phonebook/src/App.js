@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import { useState,useEffect } from 'react'
-import axios from 'axios' 
-=======
 import { useState, useEffect } from 'react'
 import axios from 'axios'
->>>>>>> e8c8e327d646a2bf5d908b8accd9d20c924196a8
 import Phonebook from './Phonebook'
 import personsService from './services/phonebooks'
 
@@ -15,24 +10,12 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
-<<<<<<< HEAD
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/phonebook')
-      .then(response => {
-        console.log('promise fulfilled')
-        setNotes(response.data)
-      })
-  }, [])
-  console.log('render', phonebook.length, 'notes')
-=======
     personsService
       .getAll()
       .then(initialPersons => {
         setPhonebook(initialPersons)
       })
   }, [])
->>>>>>> e8c8e327d646a2bf5d908b8accd9d20c924196a8
 
   const handleSubmit = (event) => {
     event.preventDefault()

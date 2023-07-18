@@ -24,6 +24,7 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+app.use(express.static('build'))
 
 morgan.token('req-body', (req) => {
     return JSON.stringify(req.body);
