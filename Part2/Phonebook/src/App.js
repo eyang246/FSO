@@ -1,11 +1,23 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
+import axios from 'axios' 
 import Phonebook from './Phonebook'
 
-const App = (props) => {
-  const[phonebook, setPhonebook] = useState(props.phonebook)
+const App = () => {
+  const[phonebook, setPhonebook] = useState([])
   const [newName, setNewName] = useState('')
   const [newOccupation, setNewOccupation] = useState('')
   const [newNumber, setNewNumber] = useState('')
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/phonebook')
+      .then(response => {
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+  }, [])
+  console.log('render', phonebook.length, 'notes')
 
   const handleSubmit = (event) => {
     event.preventDefault()
