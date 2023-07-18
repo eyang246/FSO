@@ -1,28 +1,60 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Phonebook from './Phonebook'
+import personsService from './services/phonebooks'
 
-const App = (props) => {
-  const[phonebook, setPhonebook] = useState(props.phonebook)
+const App = () => {
+  const[phonebook, setPhonebook] = useState([])
   const [newName, setNewName] = useState('')
   const [newOccupation, setNewOccupation] = useState('')
   const [newNumber, setNewNumber] = useState('')
+
+  useEffect(() => {
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPhonebook(initialPersons)
+      })
+  }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
     const newNameObj = {
       name: newName, 
       job: newOccupation,
-      number: newNumber, 
+      id: newNumber, 
     } 
-    setPhonebook(phonebook.concat(newNameObj))
-    setNewName('')
-    setNewOccupation('')
-    setNewNumber('')
+    
+    personsService
+    .create(newNameObj)
+    .then(returnedPersons => {
+      setPhonebook(phonebook.concat(returnedPersons))
+      setNewName('')
+      setNewOccupation('')
+      setNewNumber('')
+    })
+}
+
+    
+  const toggleRemovalOf = id => {
+    const person = phonebook.find(n => n.id === id)
+
+    personsService
+      .remove(id).then(returnedPersons => {
+        setPhonebook(phonebook.map(person => person.id !== id ? person : returnedPersons))
+      })
+
+      .catch(error => {
+        alert(
+          `the note '${phonebook.id}' was already deleted from server`
+        )
+        setPhonebook(phonebook.filter(p => p.id !== id))
+      })
   }
-  
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
-  } 
+
+  // const handleNameChange = (event) => {
+  //   setNewName(event.target.value)
+  // } 
   const handleOccupationChange = (event) => {
     setNewOccupation(event.target.value)
   } 
@@ -46,7 +78,7 @@ const App = (props) => {
       <h2>Numbers</h2>
       <ul>
         {phonebook.map((entry) => (
-        <Phonebook key={entry.name} phonebook={entry} />
+        <Phonebook key={entry.id} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.id)} />
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
