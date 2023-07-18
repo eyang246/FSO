@@ -1,0 +1,33 @@
+{
+  "name": "phonebookae",
+  "version": "1.0.0",
+  "description": "phonebook with Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyang246/FSO.git"
+  },
+  "keywords": [
+    "Phonebook",
+    "+",
+    "Express"
+  ],
+  "author": "Eric Yang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eyang246/FSO/issues"
+  },
+  "homepage": "https://github.com/eyang246/FSO#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
