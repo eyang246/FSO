@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { useState,useEffect } from 'react'
 import axios from 'axios' 
+=======
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+>>>>>>> e8c8e327d646a2bf5d908b8accd9d20c924196a8
 import Phonebook from './Phonebook'
+import personsService from './services/phonebooks'
 
 const App = () => {
   const[phonebook, setPhonebook] = useState([])
@@ -9,6 +15,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
+<<<<<<< HEAD
     console.log('effect')
     axios
       .get('http://localhost:3001/phonebook')
@@ -18,23 +25,53 @@ const App = () => {
       })
   }, [])
   console.log('render', phonebook.length, 'notes')
+=======
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPhonebook(initialPersons)
+      })
+  }, [])
+>>>>>>> e8c8e327d646a2bf5d908b8accd9d20c924196a8
 
   const handleSubmit = (event) => {
     event.preventDefault()
     const newNameObj = {
       name: newName, 
       job: newOccupation,
-      number: newNumber, 
+      id: newNumber, 
     } 
-    setPhonebook(phonebook.concat(newNameObj))
-    setNewName('')
-    setNewOccupation('')
-    setNewNumber('')
+    
+    personsService
+    .create(newNameObj)
+    .then(returnedPersons => {
+      setPhonebook(phonebook.concat(returnedPersons))
+      setNewName('')
+      setNewOccupation('')
+      setNewNumber('')
+    })
+}
+
+    
+  const toggleRemovalOf = id => {
+    const person = phonebook.find(n => n.id === id)
+
+    personsService
+      .remove(id).then(returnedPersons => {
+        setPhonebook(phonebook.map(person => person.id !== id ? person : returnedPersons))
+      })
+
+      .catch(error => {
+        alert(
+          `the note '${phonebook.id}' was already deleted from server`
+        )
+        setPhonebook(phonebook.filter(p => p.id !== id))
+      })
   }
-  
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
-  } 
+
+  // const handleNameChange = (event) => {
+  //   setNewName(event.target.value)
+  // } 
   const handleOccupationChange = (event) => {
     setNewOccupation(event.target.value)
   } 
@@ -58,7 +95,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {phonebook.map((entry) => (
-        <Phonebook key={entry.name} phonebook={entry} />
+        <Phonebook key={entry.id} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.id)} />
         ))}
       </ul>
       <form onSubmit={handleSubmit}>

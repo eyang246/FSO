@@ -1,9 +1,10 @@
-const Phonebook = ({ phonebook }) => {
+const Phonebook = ({ phonebook,toggleRemoval }) => {
   return (
     <div>
-      <li key={phonebook.name}>{phonebook.name}</li>
+      <li>{phonebook.name}</li>
       <li>{phonebook.job}</li>
-      <li>{phonebook.number}</li>
+      <li>{phonebook.id}</li>
+      <button onClick={toggleRemoval}>DELETE</button>
     </div>
   );
 };
