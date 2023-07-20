@@ -3,7 +3,9 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const Phonebook = require('./models/phonebook')
+const cors = require('cors')
 
+app.use(cors())
 morgan.token('req-body', (req) => {
     return JSON.stringify(req.body);
   });
@@ -81,7 +83,7 @@ app.post('/api/persons', (request,response) => {
 
     const phonebook = new Phonebook({
         name: body.name,
-        number:body.number,
+        occupation:body.occupation,
         id:body.id,
     })
 
