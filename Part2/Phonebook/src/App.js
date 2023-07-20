@@ -22,7 +22,7 @@ const App = () => {
     const newNameObj = {
       name: newName, 
       job: newOccupation,
-      id: newNumber, 
+      number: newNumber, 
     } 
     
     personsService
@@ -36,19 +36,19 @@ const App = () => {
 }
 
     
-  const toggleRemovalOf = id => {
-    const person = phonebook.find(n => n.id === id)
+  const toggleRemovalOf = name => {
+    const person = phonebook.find(n => n.name === name)
 
     personsService
-      .remove(id).then(returnedPersons => {
-        setPhonebook(phonebook.map(person => person.id !== id ? person : returnedPersons))
+      .remove(name).then(returnedPersons => {
+        setPhonebook(phonebook.map(person => person.name !== name ? person : returnedPersons))
       })
 
       .catch(error => {
         alert(
-          `the note '${phonebook.id}' was already deleted from server`
+          `the note '${phonebook.name}' was already deleted from server`
         )
-        setPhonebook(phonebook.filter(p => p.id !== id))
+        setPhonebook(phonebook.filter(p => p.name !== name))
       })
   }
 
@@ -77,7 +77,7 @@ const App = () => {
       <h2>Eric's Manual Phonebook Service</h2>
       <ul>
         {phonebook.map((entry) => (
-        <Phonebook key={entry.id} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.id)} />
+        <Phonebook key={entry.name} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.id)} />
         ))}
       </ul>
       <form onSubmit={handleSubmit}>

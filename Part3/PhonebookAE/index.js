@@ -6,6 +6,7 @@ const Phonebook = require('./models/phonebook')
 const cors = require('cors')
 
 app.use(cors())
+
 morgan.token('req-body', (req) => {
     return JSON.stringify(req.body);
   });
@@ -13,6 +14,8 @@ morgan.token('req-body', (req) => {
 app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan('[:method] :url :status - :response-time ms - :req-body'));
+
+
 
 
 app.get('/', (request,response) => {
@@ -82,9 +85,9 @@ app.post('/api/persons', (request,response) => {
     } 
 
     const phonebook = new Phonebook({
-        name: body.name,
+        name:body.name,
         occupation:body.occupation,
-        id:body.id,
+        number:body.number,
     })
 
     phonebook.save().then(savedPhonebook => {

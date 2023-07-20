@@ -3,7 +3,7 @@ const Phonebook = ({ phonebook,toggleRemoval }) => {
     <div>
       <li>{phonebook.name}</li>
       <li>{phonebook.job}</li>
-      <li>{phonebook.id}</li>
+      <li>{phonebook.number}</li>
       <button onClick={toggleRemoval}>DELETE</button>
     </div>
   );
