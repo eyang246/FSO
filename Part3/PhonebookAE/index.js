@@ -3,16 +3,14 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const Phonebook = require('./models/phonebook')
-app.use(express.static('build'))
 
 morgan.token('req-body', (req) => {
     return JSON.stringify(req.body);
   });
 
-
+app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan('[:method] :url :status - :response-time ms - :req-body'));
-
 
 
 app.get('/', (request,response) => {
@@ -27,8 +25,31 @@ app.get('/api/persons', (request, response) => {
     })
   })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Phonebook.findById(request.params.id).then(phonebook => { 
+        if(phonebook){
+            response.json(phonebook)
+        } else {
+            response.status(404).end
+        }
+        })
+        .catch(error => next(error))
+    })
+  
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
+ app.use(errorHandler)
+
+
+app.delete('/api/persons/:id', (request,response) => {
+    Phonebook.findByIdAndRemove(request.params.id).then(phonebook => { 
         if(phonebook){
             response.json(phonebook)
         } else {
@@ -41,12 +62,6 @@ app.get('/api/persons/:id', (request, response) => {
         })
   })
 
-
-app.delete('/api/persons/:id', (request,response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-    response.status(204).end();
-})
 
 // const generateId = () => {
 //     const maxId = persons.length > 0 

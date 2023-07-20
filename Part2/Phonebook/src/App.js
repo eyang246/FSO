@@ -74,8 +74,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <h2>Numbers</h2>
+      <h2>Eric's Manual Phonebook Service</h2>
       <ul>
         {phonebook.map((entry) => (
         <Phonebook key={entry.id} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.id)} />
