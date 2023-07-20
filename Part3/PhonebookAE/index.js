@@ -1,29 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+const Phonebook = require('./models/phonebook')
 app.use(express.static('build'))
 
 morgan.token('req-body', (req) => {
@@ -42,15 +21,26 @@ app.get('/', (request,response) => {
     
 })
 
-app.get('/api/persons', (request,response) => {
-    response.json(persons)
-})
+app.get('/api/persons', (request, response) => {
+    Phonebook.find({}).then(phonebooks => {
+      response.json(phonebooks)
+    })
+  })
 
-app.get('/api/persons/:id', (request,response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    response.json(person)
-})
+app.get('/api/persons/:id', (request, response) => {
+    Phonebook.findById(request.params.id).then(phonebook => { 
+        if(phonebook){
+            response.json(phonebook)
+        } else {
+            response.status(404).end
+        }
+    })
+        .catch(error => { 
+            console.log(error)
+            response.status(400).send({ error: 'malformatted id' })
+        })
+  })
+
 
 app.delete('/api/persons/:id', (request,response) => {
     const id = Number(request.params.id)
@@ -58,12 +48,12 @@ app.delete('/api/persons/:id', (request,response) => {
     response.status(204).end();
 })
 
-const generateId = () => {
-    const maxId = persons.length > 0 
-        ? Math.max(...persons.map(n => n.id))
-        : 0 
-    return maxId + 1
-}
+// const generateId = () => {
+//     const maxId = persons.length > 0 
+//         ? Math.max(...persons.map(n => n.id))
+//         : 0 
+//     return maxId + 1
+// }
 
 app.post('/api/persons', (request,response) => { 
     const body = request.body
@@ -74,26 +64,18 @@ app.post('/api/persons', (request,response) => {
         })
     } 
 
-    const nameChecker = persons.some(person => person.name === body.name)
-
-    if (nameChecker) {
-        return response.status(400).json({
-            error: 'name exists!'
-        })
-
-    }
-
-    const person = {
+    const phonebook = new Phonebook({
         name: body.name,
         number:body.number,
-        id:generateId(),
-    }
-    persons = persons.concat(person)
+        id:body.id,
+    })
 
-    response.json(person)
+    phonebook.save().then(savedPhonebook => {
+        response.json(savedPhonebook)
+    })
 })
 
-const PORT = 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+console.log(`Server running on port ${PORT}`)
 })
