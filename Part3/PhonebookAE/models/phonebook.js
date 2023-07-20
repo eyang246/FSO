@@ -15,9 +15,9 @@ mongoose.connect(url)
 })
 
 const personSchema = new mongoose.Schema({
-    id: Number,
-    occupation: String,
     name: String,
+    occupation: String,
+    id: Number,
 })
 
 module.exports = mongoose.model('Phonebook', personSchema)
