@@ -36,11 +36,11 @@ const App = () => {
 }
 
     
-  const toggleRemovalOf = name => {
-    const person = phonebook.find(n => n.name === name)
+  const toggleRemovalOf = id => {
+    const person = phonebook.find(n => n.id === id)
 
     personsService
-      .remove(name).then(returnedPersons => {
+      .remove(id).then(returnedPersons => {
         setPhonebook(phonebook.map(person => person.name !== name ? person : returnedPersons))
       })
 
@@ -77,7 +77,7 @@ const App = () => {
       <h2>Eric's Manual Phonebook Service</h2>
       <ul>
         {phonebook.map((entry) => (
-        <Phonebook key={entry.name} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.id)} />
+        <Phonebook key={entry.id} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.Id)} />
         ))}
       </ul>
       <form onSubmit={handleSubmit}>

@@ -30,8 +30,8 @@ app.get('/api/persons', (request, response) => {
     })
   })
 
-app.get('/api/persons/:id', (request, response, next) => {
-    Phonebook.findById(request.params.id).then(phonebook => { 
+app.get('/api/persons/:Id', (request, response, next) => {
+    Phonebook.findById(request.params.Id).then(phonebook => { 
         if(phonebook){
             response.json(phonebook)
         } else {
@@ -53,8 +53,8 @@ const errorHandler = (error, request, response, next) => {
  app.use(errorHandler)
 
 
-app.delete('/api/persons/:id', (request,response) => {
-    Phonebook.findByIdAndRemove(request.params.id).then(phonebook => { 
+app.delete('/api/persons/:Id', (request,response) => {
+    Phonebook.findByIdAndRemove(request.params.Id).then(phonebook => { 
         if(phonebook){
             response.json(phonebook)
         } else {
@@ -67,14 +67,6 @@ app.delete('/api/persons/:id', (request,response) => {
         })
   })
 
-
-// const generateId = () => {
-//     const maxId = persons.length > 0 
-//         ? Math.max(...persons.map(n => n.id))
-//         : 0 
-//     return maxId + 1
-// }
-
 app.post('/api/persons', (request,response) => { 
     const body = request.body
     
@@ -85,6 +77,7 @@ app.post('/api/persons', (request,response) => {
     } 
 
     const phonebook = new Phonebook({
+        id:body.id,
         name:body.name,
         occupation:body.occupation,
         number:body.number,
