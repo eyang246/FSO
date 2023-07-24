@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Phonebook from './Phonebook'
 import personsService from './services/phonebooks'
 
@@ -17,11 +16,29 @@ const App = () => {
       })
   }, [])
 
+  const toggleRemovalOf = (name) => {
+    personsService.remove(name).then(() => {
+        console.log(name)
+        setPhonebook((prevPhonebook) => prevPhonebook.filter((person) => person.name !== name )
+      )
+    })
+      // .catch(error => {
+      //   alert(
+      //     `the note '${phonebook.name}' was already deleted from server`
+      //   )
+      //   setPhonebook(phonebook.filter(p => p.id !== id))
+      // })
+  }
+
+  // const handleNameChange = (event) => {
+  //   setNewName(event.target.value)
+  // } 
+
   const handleSubmit = (event) => {
     event.preventDefault()
     const newNameObj = {
       name: newName, 
-      job: newOccupation,
+      occupation: newOccupation,
       number: newNumber, 
     } 
     
@@ -35,26 +52,6 @@ const App = () => {
     })
 }
 
-    
-  const toggleRemovalOf = id => {
-    const person = phonebook.find(n => n.id === id)
-
-    personsService
-      .remove(id).then(returnedPersons => {
-        setPhonebook(phonebook.map(person => person.name !== name ? person : returnedPersons))
-      })
-
-      .catch(error => {
-        alert(
-          `the note '${phonebook.name}' was already deleted from server`
-        )
-        setPhonebook(phonebook.filter(p => p.name !== name))
-      })
-  }
-
-  // const handleNameChange = (event) => {
-  //   setNewName(event.target.value)
-  // } 
   const handleOccupationChange = (event) => {
     setNewOccupation(event.target.value)
   } 
