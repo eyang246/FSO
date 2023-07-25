@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios' 
 import Phonebook from './Phonebook'
 import personsService from './services/phonebooks'
 
@@ -16,23 +17,19 @@ const App = () => {
       })
   }, [])
 
-  const toggleRemovalOf = (name) => {
-    personsService.remove(name).then(() => {
-        console.log(name)
-        setPhonebook((prevPhonebook) => prevPhonebook.filter((person) => person.name !== name )
-      )
+  const toggleRemovalOf = id => {
+    console.log(id)
+    personsService
+    .remove(id)
+    .then(() => {
+      console.log(`'${id}' successfully deleted from server`);
+      setPhonebook(phonebook.filter(entry => entry.id !== id));
     })
-      // .catch(error => {
-      //   alert(
-      //     `the note '${phonebook.name}' was already deleted from server`
-      //   )
-      //   setPhonebook(phonebook.filter(p => p.id !== id))
-      // })
-  }
-
-  // const handleNameChange = (event) => {
-  //   setNewName(event.target.value)
-  // } 
+    .catch(error => {
+      console.error(`Error deleting '${id}' from server:`, error);
+      alert(`Error deleting '${id}' from server`);
+    });
+}
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -74,7 +71,7 @@ const App = () => {
       <h2>Eric's Manual Phonebook Service</h2>
       <ul>
         {phonebook.map((entry) => (
-        <Phonebook key={entry.id} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.Id)} />
+        <Phonebook key={entry.id} phonebook={entry} toggleRemoval={() => toggleRemovalOf(entry.id)} />
         ))}
       </ul>
       <form onSubmit={handleSubmit}>
